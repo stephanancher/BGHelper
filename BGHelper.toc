@@ -1,0 +1,6 @@
+## Interface: 11200
+## Title: BG Helper
+## Notes: Simple BG node callout window
+## Author: Stephan
+## SavedVariables: BGHelperDB
+BGHelper.lua
