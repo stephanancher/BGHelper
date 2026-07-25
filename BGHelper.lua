@@ -213,6 +213,10 @@ local advertiseFrame = CreateFrame("Frame")
 local advertiseAt = nil
 local advertisedInCurrentBattleground = false
 
+local function IsAdvertEnabled()
+    return not BGHelperDB or BGHelperDB.advertiseEnabled ~= false
+end
+
 local function IsInBattleground()
     for i = 1, 3 do
         if GetBattlefieldStatus(i) == "active" then
@@ -224,7 +228,9 @@ local function IsInBattleground()
 end
 
 local function ScheduleBattlegroundAdvert()
-    if not advertisedInCurrentBattleground and not advertiseAt then
+    if IsAdvertEnabled()
+        and not advertisedInCurrentBattleground
+        and not advertiseAt then
         -- Give the battleground chat channel a moment to become available.
         advertiseAt = GetTime() + 3
     end
@@ -238,6 +244,10 @@ frame:RegisterEvent("ADDON_LOADED")
 frame:SetScript("OnEvent", function()
     if event == "ADDON_LOADED" and arg1 == "BGHelper" then
         BGHelperDB = BGHelperDB or {}
+
+        if BGHelperDB.advertiseEnabled == nil then
+            BGHelperDB.advertiseEnabled = true
+        end
 
         if BGHelperDB.point then
             frame:ClearAllPoints()
@@ -281,7 +291,7 @@ advertiseFrame:SetScript("OnUpdate", function()
         return
     end
 
-    if IsInBattleground() then
+    if IsAdvertEnabled() and IsInBattleground() then
         SendChatMessage(
             "Hi all! I'm using BG Helper for quick, clear base callouts. "
             .. "Get it here: https://github.com/stephanancher/BGHelper",
@@ -411,6 +421,34 @@ SlashCmdList["BGHELPER"] = function(msg)
         else
             frame:Show()
         end
+    elseif msg == "announce"
+        or msg == "announce toggle"
+        or msg == "advert"
+        or msg == "advert toggle" then
+        BGHelperDB = BGHelperDB or {}
+        BGHelperDB.advertiseEnabled = not IsAdvertEnabled()
+
+        if not BGHelperDB.advertiseEnabled then
+            advertiseAt = nil
+        end
+
+        DEFAULT_CHAT_FRAME:AddMessage(
+            "BG Helper: Join announcement "
+            .. (BGHelperDB.advertiseEnabled and "enabled." or "disabled.")
+        )
+    elseif msg == "announce on" or msg == "advert on" then
+        BGHelperDB = BGHelperDB or {}
+        BGHelperDB.advertiseEnabled = true
+        DEFAULT_CHAT_FRAME:AddMessage(
+            "BG Helper: Join announcement enabled."
+        )
+    elseif msg == "announce off" or msg == "advert off" then
+        BGHelperDB = BGHelperDB or {}
+        BGHelperDB.advertiseEnabled = false
+        advertiseAt = nil
+        DEFAULT_CHAT_FRAME:AddMessage(
+            "BG Helper: Join announcement disabled."
+        )
     elseif msg == "debug" then
         SetMapToCurrentZone()
         local playerX, playerY = GetPlayerMapPosition("player")
@@ -421,7 +459,7 @@ SlashCmdList["BGHELPER"] = function(msg)
         )
     else
         DEFAULT_CHAT_FRAME:AddMessage(
-            "BG Helper: /bgh [show | hide | toggle | debug]"
+            "BG Helper: /bgh [show | hide | toggle | announce on/off | debug]"
         )
     end
 end
