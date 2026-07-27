@@ -10,8 +10,12 @@ a base as safe without having to type each message manually.
 - `ALOT` callout for larger groups
 - `SAFE` callout for secured bases
 - Automatic detection of the nearest Arathi Basin base
+- Alliance-blue and Horde-red capture bars with a live seconds countdown
+- Clickable timer bars that announce the remaining time in battleground chat
+- Automatic timer removal when a base is defended, captured, or marked `SAFE`
+- Random battleground welcome featuring a raid member and the addon link
+- Three-second anti-spam cooldown after every callout
 - Movable window with saved positioning
-- Optional battleground join announcement
 
 ## Installation
 
@@ -32,10 +36,11 @@ an additional nested folder.
 ## Usage
 
 The helper appears automatically in Arathi Basin.
+After joining, it sends one random funny welcome once the raid roster is ready.
 
-1. Select `1`–`5`, `ALOT`, or `SAFE`.
-2. Click a base to send the callout to battleground chat.
-3. Use `CALL` to announce the base nearest to your current position.
+1. Select `1`–`5` or `ALOT`.
+2. Use `CALL` to announce enemies at the nearest base.
+3. Press `SAFE` to immediately announce that the nearest base is secure.
 
 Drag the window with the left mouse button to reposition it. Its position is
 saved between sessions.
@@ -47,15 +52,11 @@ saved between sessions.
 | `/bgh` or `/bgh toggle` | Toggle the helper window |
 | `/bgh show` | Show the helper window |
 | `/bgh hide` | Hide the helper window |
-| `/bgh announce` | Toggle the battleground join announcement |
-| `/bgh announce on` | Enable the join announcement |
-| `/bgh announce off` | Disable the join announcement completely |
+| `/bgh test` | Show sample Alliance and Horde capture timers |
+| `/bgh test off` | Remove all test timers |
 | `/bgh debug` | Show zone and map-position information |
-
-The join-announcement preference is saved between sessions. It is enabled by
-default and sends at most once per battleground visit.
 
 ## Repository
 
 Updates are available at
-[github.com/stephanancher/BGHelper](https://github.com/stephanancher/BGHelper).
+[github.com/OctoAddons/BGHelper](https://github.com/OctoAddons/BGHelper).
